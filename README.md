@@ -1,3 +1,3 @@
 # pink_ai
 
-A new Flutter project.
+A new Flutter project AI. by Pink !!
