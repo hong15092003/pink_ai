@@ -1,13 +1,14 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pink_ai/main.dart';
 import 'package:pink_ai/models/ai_content_model.dart';
 
 class APIHandle {
-  final _apiKey = "AIzaSyCGujlLQjjpEfid13hvw3wYX3gjbN482M4";
-  final _baseURL =
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=";
+  String _apiKey = "AIzaSyCGujlLQjjpEfid13hvw3wYX3gjbN482M4";
+  String _baseUrl =
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro:generateContent?key=";
   final Map<String, dynamic> body = {
     "contents": [],
     "generationConfig": {
@@ -37,9 +38,14 @@ class APIHandle {
     ]
   };
 
+  void apiKeyandBody(String apiKey, String body) {
+    _apiKey = apiKey;
+    _baseUrl = body;
+  }
+
   void generateContent(text) async {
     handleAfterCallAPI(text);
-    final response = await http.post(Uri.parse(_baseURL + _apiKey),
+    final response = await http.post(Uri.parse(_baseUrl + _apiKey),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

@@ -23,6 +23,12 @@ class _HomeViewState extends State<HomeView> {
     return isKeyboard;
   }
 
+  // @override
+  // void initState() async {
+  //   super.initState();
+  //   await homeController.getAPI();
+  // }
+
   StreamController<bool> focus = StreamController<bool>();
   bool loading = false;
   double oldPadding = 0;
@@ -39,10 +45,10 @@ class _HomeViewState extends State<HomeView> {
             Align(
               alignment: Alignment.center,
               child: ListenableBuilder(
-        listenable: homeController,
-        builder: (context, snapshot) {
-          return BodyHome(list: chatList).view();
-           }),
+                  listenable: homeController,
+                  builder: (context, snapshot) {
+                    return BodyHome(list: chatList).view();
+                  }),
             ),
             Align(
                 alignment: Alignment.bottomCenter,

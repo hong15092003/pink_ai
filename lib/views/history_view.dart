@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:pink_ai/components/color_component.dart';
 import 'package:pink_ai/components/component.dart';
 import 'package:pink_ai/controllers/history_controller.dart';
 import 'package:pink_ai/main.dart';
@@ -34,6 +35,14 @@ class _HistoryViewState extends State<HistoryView> {
                               ConnectionState.waiting) {
                             return const Center(
                                 child: CircularProgressIndicator());
+                          }
+                          if (snapshot.data == null) {
+                            return Center(
+                              child: Text(
+                                'No History',
+                                style: TextStyle(color: ColorStyle.text),
+                              ),
+                            );
                           }
                           return BodyHistory(snapshot: snapshot).view();
                         });
