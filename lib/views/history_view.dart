@@ -1,8 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:pink_ai/components/color_component.dart';
-import 'package:pink_ai/components/component.dart';
+import 'package:pink_ai/components/button/icon_button';
+import 'package:pink_ai/components/color/color_component.dart';
+import 'package:pink_ai/components/history/body.dart';
+
 import 'package:pink_ai/controllers/history_controller.dart';
 import 'package:pink_ai/main.dart';
 

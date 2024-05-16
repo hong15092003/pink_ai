@@ -2,11 +2,14 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:pink_ai/components/color_component.dart';
-import 'package:pink_ai/components/component.dart';
+import 'package:pink_ai/components/button/icon_button';
+import 'package:pink_ai/components/color/color_component.dart';
+import 'package:pink_ai/components/home/body.dart';
 import 'package:pink_ai/controllers/home_controller.dart';
 import 'package:pink_ai/models/ai_content_model.dart';
 import 'package:pink_ai/views/history_view.dart';
+import 'package:pink_ai/components/logo/text_logo.dart';
+import 'package:pink_ai/components/text_filed/text_box.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});

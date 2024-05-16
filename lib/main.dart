@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pink_ai/views/home_view.dart';
 import 'package:localstore/localstore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:pink_ai/views/start_view.dart';
