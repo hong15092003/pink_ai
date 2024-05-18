@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pink_ai/components/color/color_component.dart';
+import 'package:pink_ai/controllers/home_controller.dart';
 
 class TextBox {
   final TextEditingController textEditingController;
-  final focus;
+  dynamic focus;
 
   TextBox({
     required this.textEditingController,
@@ -21,7 +22,9 @@ class TextBox {
         controller: textEditingController,
         minLines: 1,
         maxLines: 10,
-        // expands: true,
+        onSubmitted: (_) {
+          homeController.getContent();
+        },
         // onChanged: (_) {},
         // onTap: () {},
         // onTapOutside: (i) {},

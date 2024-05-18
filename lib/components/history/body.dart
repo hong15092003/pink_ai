@@ -1,11 +1,12 @@
 
 import 'package:flutter/material.dart';
-import 'package:pink_ai/components/button/icon_button';
+import 'package:pink_ai/components/button/icon_button.dart';
+
 import 'package:pink_ai/components/color/color_component.dart';
 import 'package:pink_ai/controllers/history_controller.dart';
 
 class BodyHistory {
-  final snapshot;
+  AsyncSnapshot<Map<String, dynamic>?> snapshot;
   BodyHistory({required this.snapshot});
   Widget view() {
     final data = snapshot.data;

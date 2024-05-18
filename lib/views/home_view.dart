@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:pink_ai/components/button/icon_button';
+import 'package:pink_ai/components/button/icon_button.dart';
 import 'package:pink_ai/components/color/color_component.dart';
 import 'package:pink_ai/components/home/body.dart';
 import 'package:pink_ai/controllers/home_controller.dart';
@@ -59,7 +59,7 @@ class _HomeViewState extends State<HomeView> {
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                     child: Container(
-                      color: Colors.grey[900]!.withOpacity(0.5),
+                      color: Colors.grey[900]!.withOpacity(0.7),
                       padding: EdgeInsets.only(
                           bottom: isKeyboardShown(context) ? 5 : 30,
                           left: 10,
