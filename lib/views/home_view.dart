@@ -26,12 +26,6 @@ class _HomeViewState extends State<HomeView> {
     return isKeyboard;
   }
 
-  // @override
-  // void initState() async {
-  //   super.initState();
-  //   await homeController.getAPI();
-  // }
-
   StreamController<bool> focus = StreamController<bool>();
   bool loading = false;
   double oldPadding = 0;
