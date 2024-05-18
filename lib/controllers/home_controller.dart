@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pink_ai/controllers/api_controller.dart';
 import 'package:pink_ai/main.dart';
-import 'package:pink_ai/models/ai_content_model.dart';
+import 'package:pink_ai/models/chat_model.dart';
 
 
 class HomeController extends ChangeNotifier {

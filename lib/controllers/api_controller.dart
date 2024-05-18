@@ -1,48 +1,17 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:pink_ai/config.dart';
+
 import 'package:pink_ai/controllers/home_controller.dart';
 import 'package:pink_ai/models/ai_content_model.dart';
-import 'package:http/http.dart' as http;
-
 
 class APIHandle {
-  String _apiKey = "AIzaSyCGujlLQjjpEfid13hvw3wYX3gjbN482M4";
-  String _baseUrl =
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=";
-  final Map<String, dynamic> body = {
-    "contents": [],
-    "generationConfig": {
-      "temperature": 1,
-      "topK": 10,
-      "topP": 1,
-      "maxOutputTokens": 2048,
-      "stopSequences": []
-    },
-    "safetySettings": [
-      {
-        "category": "HARM_CATEGORY_HARASSMENT",
-        "threshold": "BLOCK_MEDIUM_AND_ABOVE"
-      },
-      {
-        "category": "HARM_CATEGORY_HATE_SPEECH",
-        "threshold": "BLOCK_MEDIUM_AND_ABOVE"
-      },
-      {
-        "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-        "threshold": "BLOCK_MEDIUM_AND_ABOVE"
-      },
-      {
-        "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-        "threshold": "BLOCK_MEDIUM_AND_ABOVE"
-      }
-    ]
-  };
+  final String _apiKey = Config().apiKey;
+  final String _baseUrl = Config().baseUrl;
+  Map<String, dynamic> body = Config().body;
 
-  void apiKeyandBody(String apiKey, String body) {
-    _apiKey = apiKey;
-    _baseUrl = body;
-  }
 
   void generateContent(text) async {
     handleAfterCallAPI(text);
@@ -53,8 +22,6 @@ class APIHandle {
         body: jsonEncode(body));
     handleBeforeCallAPI(response);
   }
-
-
 
   void addContentBody(String text, String role) {
     body['contents'].add({

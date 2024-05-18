@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pink_ai/Extensions/markdown.dart';
-import 'package:pink_ai/models/ai_content_model.dart';
+import 'package:pink_ai/models/chat_model.dart';
 
 class BodyHome {
   List<ChatModel> list;
