@@ -1,12 +1,12 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:pink_ai/components/button/icon_button.dart';
 import 'package:pink_ai/components/color/color_component.dart';
 import 'package:pink_ai/components/history/body.dart';
-
 import 'package:pink_ai/controllers/history_controller.dart';
-import 'package:pink_ai/main.dart';
 
 class HistoryView extends StatefulWidget {
   const HistoryView({super.key});
@@ -31,23 +31,31 @@ class _HistoryViewState extends State<HistoryView> {
                   listenable: historyController,
                   builder: (context, snapshot) {
                     return FutureBuilder(
-                        future: db.collection('history').get(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          }
-                          if (snapshot.data == null) {
-                            return Center(
-                              child: Text(
-                                'No History',
-                                style: TextStyle(color: ColorStyle.text),
-                              ),
-                            );
-                          }
-                          return BodyHistory(snapshot: snapshot).view();
-                        });
+                      future: FirebaseFirestore.instance
+                          .collection('history')
+                          .get(),
+                      builder:
+                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                          return Center(
+                            child: Text(
+                              'No History',
+                              style: TextStyle(color: ColorStyle.text),
+                            ),
+                          );
+                        }
+                        final documents = snapshot.data!.docs;
+                        // Now you can use `documents`, which is a list of QueryDocumentSnapshot.
+                        // For example, to pass the data of the first document to BodyHistory:
+                        return BodyHistory(snapshot: documents)
+                            .view();
+                      },
+                    );
                   }),
             ),
             Positioned(

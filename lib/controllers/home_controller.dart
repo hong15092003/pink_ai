@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pink_ai/controllers/api_controller.dart';
-import 'package:pink_ai/main.dart';
 import 'package:pink_ai/models/chat_model.dart';
 
 
@@ -30,7 +30,7 @@ class HomeController extends ChangeNotifier {
   }
 
   void saveData() {
-    final id = db.collection('history').doc().id;
+    final id = FirebaseFirestore.instance.collection('history').doc().id;
     DateTime time = DateTime.now();
     String formatTime = time.toString();
     final chat = {
@@ -39,7 +39,7 @@ class HomeController extends ChangeNotifier {
       'name': chatList[0].text,
       'chat': chatList.map((e) => e.toJson()).toList(),
     };
-    db.collection('history').doc(id).set(chat);
+    FirebaseFirestore.instance.collection('history').doc(id).set(chat);
     clearContent();
     notifyListeners();
   }

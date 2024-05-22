@@ -35,3 +35,5 @@ class Config{
     baseUrl = url;
   }
 }
+
+Config config = Config();

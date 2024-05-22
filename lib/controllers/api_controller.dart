@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pink_ai/config.dart';
 
@@ -8,10 +7,9 @@ import 'package:pink_ai/controllers/home_controller.dart';
 import 'package:pink_ai/models/ai_content_model.dart';
 
 class APIHandle {
-  final String _apiKey = Config().apiKey;
-  final String _baseUrl = Config().baseUrl;
-  Map<String, dynamic> body = Config().body;
-
+  final String _apiKey = config.apiKey;
+  final String _baseUrl = config.baseUrl;
+  Map<String, dynamic> body = config.body;
 
   void generateContent(text) async {
     handleAfterCallAPI(text);
@@ -33,7 +31,6 @@ class APIHandle {
   }
 
   void handleAfterCallAPI(text) {
-    debugPrint('click');
     addContentBody(text, 'user');
   }
 

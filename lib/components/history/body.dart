@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pink_ai/components/button/icon_button.dart';
 
@@ -6,12 +7,12 @@ import 'package:pink_ai/components/color/color_component.dart';
 import 'package:pink_ai/controllers/history_controller.dart';
 
 class BodyHistory {
-  AsyncSnapshot<Map<String, dynamic>?> snapshot;
+  List<QueryDocumentSnapshot<Object?>> snapshot;
   BodyHistory({required this.snapshot});
   Widget view() {
-    final data = snapshot.data;
+    final data = snapshot.asMap();
     return ListView.builder(
-      itemCount: data!.length,
+      itemCount: data.length,
       itemBuilder: (context, index) {
         final item = data.values.elementAt(index);
 
