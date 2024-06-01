@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 
 class TextLogo {
-  const TextLogo();
+  final BuildContext context;
+  const TextLogo({Key? key, required this.context});
 
   Widget textLogo() {
-    return const Align(
+    return Align(
       alignment: Alignment.center,
       child: Text(
         'PIAI',
         style: TextStyle(
           fontSize: 80,
           fontWeight: FontWeight.bold,
-          color: Color.fromRGBO(46, 46, 46, 1),
+          color: Theme.of(context).shadowColor,
         ),
       ),
     );
   }
 }
-
-

@@ -1,3 +1,4 @@
+
 class ChatModel {
   String text;
   String role;
@@ -15,5 +16,3 @@ class ChatModel {
     return ChatModel(text: text, role: role);
   }
 }
-
-List<ChatModel> chatList = [];

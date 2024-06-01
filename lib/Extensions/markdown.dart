@@ -13,7 +13,10 @@ class MarkDown extends StatelessWidget {
         a: const TextStyle(color: Colors.white),
         p: const TextStyle(color: Colors.white),
         code: const TextStyle(
-            color: Colors.white, backgroundColor: Colors.transparent),
+          color: Colors.blue,
+          backgroundColor: Colors.transparent,
+          fontWeight: FontWeight.bold,
+        ),
         h1: const TextStyle(color: Colors.white),
         h2: const TextStyle(color: Colors.white),
         h3: const TextStyle(color: Colors.white),
@@ -35,9 +38,9 @@ class MarkDown extends StatelessWidget {
           border: Border.all(
             color: Colors.grey[850]!,
           ),
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
-              color: Colors.blue,
+              color: Colors.grey.shade900,
               blurRadius: 2.0,
               spreadRadius: 1.0,
             ),

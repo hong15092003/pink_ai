@@ -1,15 +1,10 @@
-import 'dart:async';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:pink_ai/components/button/icon_button.dart';
-import 'package:pink_ai/components/color/color_component.dart';
 import 'package:pink_ai/components/home/body.dart';
+import 'package:pink_ai/components/home/bottom.dart';
 import 'package:pink_ai/controllers/home_controller.dart';
 import 'package:pink_ai/models/chat_model.dart';
-import 'package:pink_ai/views/history_view.dart';
 import 'package:pink_ai/components/logo/text_logo.dart';
-import 'package:pink_ai/components/text_filed/text_box.dart';
+import 'package:pink_ai/views/drawer_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -19,84 +14,28 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  bool isKeyboardShown(BuildContext context) {
-    if (MediaQuery.of(context).viewInsets.bottom > 300) return true;
-    bool isKeyboard = MediaQuery.of(context).viewInsets.bottom > oldPadding;
-    oldPadding = MediaQuery.of(context).viewInsets.bottom;
-    return isKeyboard;
-  }
-
-  StreamController<bool> focus = StreamController<bool>();
-  bool loading = false;
-  double oldPadding = 0;
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: ColorStyle.backgroundColor,
-        drawer: const HistoryView(),
-        body: Center(
-          child: Stack(children: [
-            const TextLogo().textLogo(),
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      drawer: const DrawerView(),
+      body: Center(
+        child: Stack(
+          children: [
+            TextLogo(context: context).textLogo(),
             Align(
               alignment: Alignment.center,
-              child: ListenableBuilder(
-                  listenable: homeController,
+              child: StreamBuilder<List<ChatModel>>(
+                  stream: homeController.chatListStream,
                   builder: (context, snapshot) {
-                    return BodyHome(list: chatList).view();
+                    return BodyHome(list: homeController.chatList).view();
                   }),
             ),
             Align(
-                alignment: Alignment.bottomCenter,
-                child: ClipRRect(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                    child: Container(
-                      color: Colors.grey[900]!.withOpacity(0.7),
-                      padding: EdgeInsets.only(
-                          bottom: isKeyboardShown(context) ? 5 : 30,
-                          left: 10,
-                          right: 10,
-                          top: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Row(
-                            children: [
-                              Builder(
-                                builder: (context) => ButtonIcon(
-                                  icon: Icons.menu_rounded,
-                                  onPressed: () {
-                                    Scaffold.of(context).openDrawer();
-                                  },
-                                ).circle(),
-                              ),
-                              const SizedBox(width: 10),
-                            ],
-                          ),
-                          ButtonIcon(
-                                  icon: Icons.add_rounded,
-                                  onPressed: () => homeController.saveData())
-                              .circle(),
-                          const SizedBox(width: 10),
-                          Expanded(
-                              child: TextBox(
-                            textEditingController:
-                                homeController.textEditingController,
-                            focus: focus,
-                          ).textBox()),
-                          const SizedBox(width: 10),
-                          ButtonIcon(
-                                  icon: Icons.arrow_upward_rounded,
-                                  onPressed: () => homeController.getContent())
-                              .circle(),
-                        ],
-                      ),
-                    ),
-                  ),
-                )),
-          ]),
+              alignment: Alignment.bottomCenter,
+              child: Bottom(context: context).bar(),
+            ),
+          ],
         ),
       ),
     );

@@ -6,18 +6,16 @@ import 'package:pink_ai/models/chat_model.dart';
 class HistoryController extends ChangeNotifier {
   void deleteHistory(id) {
     FirebaseFirestore.instance.collection('history').doc(id).delete();
-    notifyListeners();
   }
 
   void restoreHistory(item) {
-    if (chatList.isNotEmpty) {
+    if (homeController.chatList.isNotEmpty) {
       homeController.saveData();
     }
     List listChat = item['chat'].map((e) => ChatModel.fromJson(e)).toList();
     List<ChatModel> listChatModel = listChat.cast<ChatModel>();
     homeController.swapList(listChatModel);
     FirebaseFirestore.instance.collection('history').doc(item['id']).delete();
-    notifyListeners();
   }
 }
 

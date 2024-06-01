@@ -1,7 +1,7 @@
-class Config{
-  String apiKey = "AIzaSyCGujlLQjjpEfid13hvw3wYX3gjbN482M4";
+class Config {
+  String apiKey = "AIzaSyAxZBFmrxQGifumViAhMz-icNX2v2GvL0k";
   String baseUrl =
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=";
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=";
   final Map<String, dynamic> body = {
     "contents": [],
     "generationConfig": {
@@ -30,7 +30,7 @@ class Config{
       }
     ]
   };
-  void updateConfig(api, url){
+  void updateConfig(api, url) {
     apiKey = api;
     baseUrl = url;
   }

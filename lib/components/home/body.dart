@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pink_ai/Extensions/markdown.dart';
+import 'package:pink_ai/controllers/home_controller.dart';
 import 'package:pink_ai/models/chat_model.dart';
 
 class BodyHome {
@@ -35,6 +36,7 @@ class BodyHome {
     final length = list.length;
     return ListView.builder(
       padding: const EdgeInsets.only(top: 80, bottom: 80),
+      controller: homeController.scrollController,
       itemCount: length + chating(length),
       itemBuilder: (context, index) {
         return Align(
@@ -42,30 +44,44 @@ class BodyHome {
               ? Alignment.centerRight
               : Alignment.centerLeft,
           child: Container(
-            margin: checkRoleUser(index)
-                ? const EdgeInsets.only(
-                    top: 10, left: 60, right: 10, bottom: 10)
-                : const EdgeInsets.only(
-                    top: 10, left: 10, right: 60, bottom: 10),
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: checkRoleUser(index)
-                  ? Colors.blue.withOpacity(0.8)
-                  : Colors.grey[900]!.withOpacity(0.8),
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: checkRoleUser(index) ? Colors.blue : Colors.grey[900]!,
-                  blurRadius: 5.0,
-                  spreadRadius: 0.0,
-                  // offset: Offset(2.0, 2.0), // shadow direction: bottom right
-                )
-              ],
-            ),
-            child: MarkDown(
-              content(index),
-            ),
-          ),
+              margin: checkRoleUser(index)
+                  ? const EdgeInsets.only(
+                      top: 10, left: 60, right: 10, bottom: 10)
+                  : const EdgeInsets.only(
+                      top: 10, left: 10, right: 60, bottom: 10),
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: checkRoleUser(index)
+                    ? Colors.blue.withOpacity(0.8)
+                    : Colors.grey[900]!.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color:
+                        checkRoleUser(index) ? Colors.blue : Colors.grey[900]!,
+                    blurRadius: 5.0,
+                    spreadRadius: 0.0,
+                    // offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                  )
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: checkRoleUser(index)
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    checkRoleUser(index) ? 'User' : 'Pink AI',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  MarkDown(
+                    content(index),
+                  ),
+                ],
+              )),
         );
       },
     );
