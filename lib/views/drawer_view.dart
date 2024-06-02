@@ -13,12 +13,14 @@ class DrawerView extends StatefulWidget {
 }
 
 class _DrawerViewState extends State<DrawerView> {
-  Widget view = const HistoryView();
+  ValueNotifier<Widget> view = ValueNotifier(const HistoryView());
   @override
   Widget build(BuildContext context) {
     final fullHeight = MediaQuery.of(context).size.height;
     // final fullWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor:
+          Theme.of(context).scaffoldBackgroundColor.withOpacity(0.9),
       body: Center(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -26,7 +28,12 @@ class _DrawerViewState extends State<DrawerView> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 60.0),
-                child: view,
+                child: ValueListenableBuilder(
+                  valueListenable: view,
+                  builder: (context, value, child) {
+                    return value;
+                  },
+                ),
               ),
               Positioned(
                 top: 0,
@@ -37,10 +44,10 @@ class _DrawerViewState extends State<DrawerView> {
                   height: fullHeight,
                   // width: 50,
                   decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.1),
+                    color: Theme.of(context).dividerColor.withOpacity(0.1),
                     border: Border(
                       right: BorderSide(
-                        color: Colors.blue.withOpacity(0.1),
+                        color: Theme.of(context).primaryColor.withOpacity(0.1),
                         width: 2,
                       ),
                     ),
@@ -53,22 +60,14 @@ class _DrawerViewState extends State<DrawerView> {
                     children: [
                       ButtonIcon(
                         context: context,
-                        icon: Icons.history_rounded,
-                        onPressed: () => setState(
-                          () {
-                            view = const HistoryView();
-                          },
-                        ),
+                        icon: Icons.restore_page_rounded,
+                        onPressed: () => view.value = const HistoryView(),
                       ).circle(),
                       const SizedBox(height: 10),
                       ButtonIcon(
                         context: context,
                         icon: Icons.settings_rounded,
-                        onPressed: () => setState(
-                          () {
-                            view = const SettingsView();
-                          },
-                        ),
+                        onPressed: () => view.value = const SettingsView(),
                       ).circle(),
                       const SizedBox(height: 10),
                       ButtonIcon(

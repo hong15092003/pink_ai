@@ -12,7 +12,9 @@ ThemeData darkMode() {
     scaffoldBackgroundColor: Colors.black,
     textTheme: const TextTheme(
       labelMedium: TextStyle(color: Colors.white, fontSize: 15),
-      titleMedium: TextStyle(color: Colors.white, fontSize: 15),
+      titleMedium: TextStyle(
+          color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+      headlineLarge: TextStyle(color: Colors.white, fontSize: 20),
     ),
   );
 }

@@ -52,13 +52,14 @@ class BodyHome {
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                 color: checkRoleUser(index)
-                    ? Colors.blue.withOpacity(0.8)
-                    : Colors.grey[900]!.withOpacity(0.8),
+                    ? Theme.of(context).primaryColor.withOpacity(0.8)
+                    : Theme.of(context).canvasColor.withOpacity(0.8),
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color:
-                        checkRoleUser(index) ? Colors.blue : Colors.grey[900]!,
+                    color: checkRoleUser(index)
+                        ? Theme.of(context).primaryColor.withOpacity(0.8)
+                        : Theme.of(context).canvasColor.withOpacity(0.8),
                     blurRadius: 5.0,
                     spreadRadius: 0.0,
                     // offset: Offset(2.0, 2.0), // shadow direction: bottom right
@@ -70,13 +71,6 @@ class BodyHome {
                     ? CrossAxisAlignment.end
                     : CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    checkRoleUser(index) ? 'User' : 'Pink AI',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                   MarkDown(
                     content(index),
                   ),
