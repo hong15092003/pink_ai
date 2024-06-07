@@ -5,16 +5,18 @@ ThemeData lightMode() {
     brightness: Brightness.light,
     primaryColor: Colors.blue,
     indicatorColor: Colors.white,
-    canvasColor: Colors.grey[200],
+    canvasColor: Colors.white,
     shadowColor: Colors.grey[300],
-    dividerColor: Colors.grey[300],
+    dividerColor: Colors.grey[800],
     hintColor: Colors.grey[800],
     scaffoldBackgroundColor: Colors.white,
-    textTheme: const TextTheme(
-      labelMedium: TextStyle(color: Colors.black, fontSize: 15),
+    textTheme: TextTheme(
+      labelMedium: TextStyle(color: Colors.grey[900], fontSize: 14,),
+      labelSmall: const TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w400),
       titleMedium: TextStyle(
-          color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
-      headlineLarge: TextStyle(color: Colors.black, fontSize: 20),
+          color: Colors.grey[900], fontSize: 15, fontWeight: FontWeight.bold),
+      headlineLarge: const TextStyle(
+          color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
     ),
   );
 }

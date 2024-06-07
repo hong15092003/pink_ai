@@ -6,15 +6,17 @@ ThemeData darkMode() {
     primaryColor: Colors.blue,
     indicatorColor: Colors.white,
     dividerColor: Colors.grey[800],
-    canvasColor: Colors.grey[900],
+    canvasColor: Colors.grey[800],
     shadowColor: Colors.grey[800],
     hintColor: Colors.grey[800],
     scaffoldBackgroundColor: Colors.black,
     textTheme: const TextTheme(
-      labelMedium: TextStyle(color: Colors.white, fontSize: 15),
+      labelSmall: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400),
+      labelMedium: TextStyle(color: Colors.white, fontSize: 14),
       titleMedium: TextStyle(
           color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
-      headlineLarge: TextStyle(color: Colors.white, fontSize: 20),
+      headlineLarge: TextStyle(
+          color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
     ),
   );
 }

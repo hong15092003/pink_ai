@@ -1,7 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:pink_ai/components/button/icon_button.dart';
+import 'package:pink_ai/components/button/text_button.dart';
+import 'package:pink_ai/components/text_filed/text_box.dart';
+import 'package:pink_ai/controllers/history_controller.dart';
+
 import 'package:pink_ai/views/history_view.dart';
 import 'package:pink_ai/views/settings_view.dart';
 
@@ -13,76 +15,147 @@ class DrawerView extends StatefulWidget {
 }
 
 class _DrawerViewState extends State<DrawerView> {
-  ValueNotifier<Widget> view = ValueNotifier(const HistoryView());
+  final ValueNotifier<bool> _showBottomSheet = ValueNotifier(false);
+  ValueNotifier<bool> searchOnTap = ValueNotifier(false);
+  TextEditingController searchController = TextEditingController();
+
+  /// Show settingview
+
   @override
   Widget build(BuildContext context) {
-    final fullHeight = MediaQuery.of(context).size.height;
-    // final fullWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor:
-          Theme.of(context).scaffoldBackgroundColor.withOpacity(0.9),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: Top(
+        context: context,
+        display: _showBottomSheet,
+      ).view(),
+      bottomNavigationBar: const SizedBox(
+        height: 20,
+      ),
+      bottomSheet: BottomSettings(
+        context: context,
+        display: _showBottomSheet,
+      ).view(),
       body: Center(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 60.0),
-                child: ValueListenableBuilder(
-                  valueListenable: view,
-                  builder: (context, value, child) {
-                    return value;
-                  },
-                ),
-              ),
-              Positioned(
-                top: 0,
-                left: 0,
-                child: Container(
-                  padding:
-                      const EdgeInsets.only(bottom: 35, right: 10, left: 10),
-                  height: fullHeight,
-                  // width: 50,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).dividerColor.withOpacity(0.1),
-                    border: Border(
-                      right: BorderSide(
-                        color: Theme.of(context).primaryColor.withOpacity(0.1),
-                        width: 2,
-                      ),
-                    ),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(5),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ButtonIcon(
-                        context: context,
-                        icon: Icons.restore_page_rounded,
-                        onPressed: () => view.value = const HistoryView(),
-                      ).circle(),
-                      const SizedBox(height: 10),
-                      ButtonIcon(
-                        context: context,
-                        icon: Icons.settings_rounded,
-                        onPressed: () => view.value = const SettingsView(),
-                      ).circle(),
-                      const SizedBox(height: 10),
-                      ButtonIcon(
-                              context: context,
-                              icon: Icons.arrow_back_rounded,
-                              onPressed: () => Navigator.pop(context, '/home'))
-                          .circle(),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+        children: [
+          Container(
+              margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+              child: Center(
+                  child: HistoryView(
+                context: context,
+              ).view())),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Bottom(
+              context: context,
+            ).view(searchOnTap, searchController),
           ),
-        ),
+        ],
+      )),
+    );
+  }
+}
+
+class Top {
+  final BuildContext context;
+  final ValueNotifier<bool> display;
+
+  Top({required this.context, required this.display});
+  AppBar view() {
+    return AppBar(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      leading: ButtonIcon(
+        context: context,
+        icon: Icons.person_rounded,
+        onPressed: () {
+          display.value = !display.value;
+        },
+      ).noBorder(),
+      title: ValueListenableBuilder(
+          valueListenable: display,
+          builder: (context, value, child) {
+            return ButtonText(
+              context: context,
+              text: value ? 'settings' : 'history',
+              onPressed: () {
+                display.value = !display.value;
+              },
+            ).circle();
+          }),
+      actions: [
+        ButtonIcon(
+          context: context,
+          icon: Icons.arrow_forward_ios_rounded,
+          onPressed: () {
+            Scaffold.of(context).openEndDrawer();
+          },
+        ).noBorder(),
+      ],
+    );
+  }
+}
+
+class Bottom {
+  final BuildContext context;
+  Bottom({
+    required this.context,
+  });
+
+  Widget view(onTap, searchController) {
+    return Container(
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Expanded(
+            child: TextBox(
+              onTap: onTap,
+              context: context,
+              textEditingController: searchController,
+              suffix: ButtonIcon(
+                  context: context,
+                  icon: Icons.search_rounded,
+                  onPressed: () {
+                    historyController.searchChat(searchController.text);
+                  }).circleBorder(),
+            ).chat(),
+          ),
+        ],
       ),
     );
+  }
+}
+
+class BottomSettings {
+  BuildContext context;
+  final ValueNotifier<bool> display;
+  BottomSettings({required this.context, required this.display});
+  Widget view() {
+    return ValueListenableBuilder(
+        valueListenable: display,
+        builder: (context, value, child) {
+          if (value) {
+            return Builder(builder: (context) {
+              return BottomSheet(
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  onClosing: () {},
+                  animationController: AnimationController(
+                    vsync: Navigator.of(context),
+                    duration: const Duration(milliseconds: 1000),
+                    reverseDuration: const Duration(milliseconds: 1000),
+                  ),
+                  onDragStart: (details) => (),
+                  onDragEnd: (details, {required isClosing}) {
+                    display.value = false;
+                  },
+                  builder: (context) {
+                    return SettingsView(display: display);
+                  });
+            });
+          } else {
+            return const SizedBox();
+          }
+        });
   }
 }

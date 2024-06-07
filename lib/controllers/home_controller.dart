@@ -1,12 +1,18 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
 import 'package:pink_ai/controllers/api_controller.dart';
+import 'package:pink_ai/controllers/firebase_controller.dart';
 import 'package:pink_ai/models/chat_model.dart';
 
 class HomeController {
+  //Biến hiển thị hoặc ẩn OtherFn
+  final displayOtherFunction = ValueNotifier<bool>(true);
+
+  // Biến kiểm soát textbox của người dùng
   final TextEditingController textEditingController = TextEditingController();
+  // danh sách chat
   List<ChatModel> chatList = [];
   final _chatListStreamController = StreamController<List<ChatModel>>();
   Stream<List<ChatModel>> get chatListStream =>
@@ -15,15 +21,22 @@ class HomeController {
 
   void getContent() {
     String content = textEditingController.text;
+    textEditingController.clear();
     content = content.trimLeft();
     if (content.isEmpty) return;
     pushContent(content, 'user');
-    apiHandle.generateContent(textEditingController.text);
-    clearText();
+    geminiChat.generateContent(content);
   }
 
   void pushContent(String content, String role) {
-    chatList.add(ChatModel(text: content, role: role));
+    final time = DateTime.now();
+    final chat = ChatModel(
+      text: content,
+      role: role,
+      time: time,
+    );
+    chatList.add(chat);
+    firebaseController.saveChat(chat);
     scrollToDown();
     _chatListStreamController.add(chatList);
   }
@@ -36,31 +49,14 @@ class HomeController {
     );
   }
 
-  void clearText() {
-    textEditingController.clear();
-  }
-
   void clearContent() {
-    apiHandle.body['contents'].clear();
-  }
-
-  void saveData() {
-    final id = FirebaseFirestore.instance.collection('history').doc().id;
-    DateTime time = DateTime.now();
-    String formatTime = time.toString();
-    final chat = {
-      'id': id,
-      'time': formatTime,
-      'name': chatList[0].text,
-      'chat': chatList.map((e) => e.toJson()).toList(),
-    };
-    FirebaseFirestore.instance.collection('history').doc(id).set(chat);
+    geminiChat.body['contents'].clear();
   }
 
   void newChat() {
     if (chatList.isNotEmpty) {
       clearContent();
-      saveData();
+      firebaseController.createNewChat();
       chatList.clear();
       _chatListStreamController.add(chatList);
     }

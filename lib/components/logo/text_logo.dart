@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 class TextLogo {
   final BuildContext context;
-  const TextLogo({Key? key, required this.context});
+  final String text;
+  const TextLogo({required this.text, required this.context});
 
   Widget textLogo() {
     return Align(
       alignment: Alignment.center,
       child: Text(
-        'PIAI',
+        text,
         style: TextStyle(
           fontSize: 80,
           fontWeight: FontWeight.bold,

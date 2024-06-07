@@ -30,6 +30,8 @@ class Config {
       }
     ]
   };
+
+
   void updateConfig(api, url) {
     apiKey = api;
     baseUrl = url;

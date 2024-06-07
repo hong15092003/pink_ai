@@ -57,7 +57,8 @@ class StartViewState extends State<StartView> {
         future: getAPI(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: TextLogo(context: context).textLogo());
+            return Center(
+                child: TextLogo(context: context, text: 'Loading').textLogo());
           } else {
             return const SizedBox(); // Empty container as we are navigating to HomeView after API call
           }
