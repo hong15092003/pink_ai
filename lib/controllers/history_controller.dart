@@ -12,9 +12,9 @@ class HistoryController extends ChangeNotifier {
   }
 
   void restoreHistory(ChatDetailModel item) async {
-    final idChat = item.id;
-    firebaseController.idChat = idChat;
-    final List<ChatModel> chatList = await firebaseController.getChat(idChat);
+    final chatId = item.id;
+    firebaseController.chatId = chatId;
+    final List<ChatModel> chatList = await firebaseController.getChat(chatId);
     homeController.swapList(chatList);
   }
 

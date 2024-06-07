@@ -45,12 +45,12 @@ class LoginView extends StatelessWidget {
             TextBox(
               context: context,
               textEditingController: emailAddress,
-            ).inputInfo('Email hoặc tên đăng nhập'),
+            ).inputInfoCirlce('Email hoặc tên đăng nhập'),
             const SizedBox(height: 16),
             TextBox(
               context: context,
               textEditingController: password,
-            ).inputInfo('Mật khẩu', isPassword: true),
+            ).inputInfoCirlce('Mật khẩu', isPassword: true),
             const SizedBox(height: 15),
             Container(
               constraints: const BoxConstraints(maxWidth: 500),

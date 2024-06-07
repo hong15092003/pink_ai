@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pink_ai/controllers/home_controller.dart';
@@ -53,7 +55,7 @@ class TextBox {
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
         border: Border.all(
-          color: Theme.of(context).shadowColor,
+          color: Theme.of(context).primaryColor.withOpacity(0.3),
           width: 1,
         ),
         borderRadius: BorderRadius.circular(25),
@@ -69,7 +71,7 @@ class TextBox {
           controller: textEditingController,
           minLines: 1,
           maxLines: 4,
-          // textInputAction: TextInputAction.none,
+          textInputAction: Platform.isIOS ? TextInputAction.done : TextInputAction.none,
           onChanged: (_) {},
           onTap: () {
             onTap!.value = true;
@@ -97,13 +99,13 @@ class TextBox {
     );
   }
 
-  Widget inputInfo(String text, {bool isPassword = false}) {
+  Widget inputInfoCirlce(String text, {bool isPassword = false}) {
     return Container(
       constraints: const BoxConstraints(maxWidth: 500.0),
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
         border: Border.all(
-          color: Theme.of(context).dividerColor,
+          color: Theme.of(context).primaryColor,
           width: 1,
         ),
         borderRadius: BorderRadius.circular(25),
@@ -119,7 +121,52 @@ class TextBox {
           controller: textEditingController,
           maxLines: 1,
 
-          // textInputAction: TextInputAction.none,
+          textInputAction: Platform.isIOS ? TextInputAction.done : TextInputAction.none,
+          // onChanged: (_) {
+          //   print(_);
+          // },
+          onTap: () {},
+          onTapOutside: (i) {
+            _focusNode.unfocus();
+          },
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(
+              borderSide: BorderSide.none,
+            ),
+            hintText: text,
+            hintStyle: Theme.of(context).textTheme.labelMedium,
+            contentPadding:
+                const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+          ),
+          style: Theme.of(context).textTheme.labelMedium,
+        ),
+      ),
+    );
+  }
+
+  Widget inputInfoRectangle(String text, {bool isPassword = false}) {
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 500.0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        border: Border.all(
+          color: Theme.of(context).primaryColor,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: KeyboardListener(
+        focusNode: _focusNode,
+        onKeyEvent: (KeyEvent event) {
+          keyPress(event);
+        },
+        child: TextField(
+          obscureText: isPassword,
+          cursorColor: Theme.of(context).primaryColor,
+          controller: textEditingController,
+          maxLines: 1,
+
+         textInputAction: Platform.isIOS ? TextInputAction.done : TextInputAction.none,
           // onChanged: (_) {
           //   print(_);
           // },

@@ -54,12 +54,12 @@ class Body {
         TextBox(
           context: context,
           textEditingController: userName,
-        ).inputInfo('Email'),
+        ).inputInfoCirlce('Email'),
         const SizedBox(height: 16),
         TextBox(
           context: context,
           textEditingController: password,
-        ).inputInfo(
+        ).inputInfoCirlce(
           'Mật khẩu',
           isPassword: true,
         ),
@@ -67,7 +67,7 @@ class Body {
         TextBox(
           context: context,
           textEditingController: confirmPassword,
-        ).inputInfo(
+        ).inputInfoCirlce(
           'Nhập lại mật khẩu',
           isPassword: true,
         ),

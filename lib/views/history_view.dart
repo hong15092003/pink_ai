@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pink_ai/config.dart';
 
 import 'package:pink_ai/controllers/history_controller.dart';
 import 'package:pink_ai/models/chat_detail_model.dart';
@@ -11,14 +11,11 @@ class HistoryView {
   HistoryView({
     required this.context,
   });
-  final _firestore = FirebaseFirestore.instance
-      .collection('User')
-      .doc(FirebaseAuth.instance.currentUser!.uid)
-      .collection('saveChat');
+ 
 
   Widget view() {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.snapshots(),
+      stream: config.firestore.snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return const Text('Có lỗi xảy ra. Vuil lòng thử lại');

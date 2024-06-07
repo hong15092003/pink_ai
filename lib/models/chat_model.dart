@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ChatModel {
   String text;
   String role;
@@ -15,7 +17,7 @@ class ChatModel {
     return <String, dynamic>{
       'text': text,
       'role': role,
-      'time': time.millisecondsSinceEpoch,
+      'time': time,
     };
   }
 
@@ -35,7 +37,7 @@ class ChatModel {
     return ChatModel(
       text: map['text'] as String,
       role: map['role'] as String,
-      time: DateTime.fromMillisecondsSinceEpoch(map['time'] as int),
+      time: (map['time'] as Timestamp).toDate(),
     );
   }
 

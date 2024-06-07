@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+
 class Config {
   String apiKey = "AIzaSyAxZBFmrxQGifumViAhMz-icNX2v2GvL0k";
   String baseUrl =
@@ -30,11 +33,52 @@ class Config {
       }
     ]
   };
+  String firstName = 'User';
+  String lastName = 'Guest';
+  String email = '';
+  dynamic _firestore;
+  dynamic _firestoreUser;
 
+  get firestore => _firestore;
+  get firestoreUser => _firestoreUser;
+
+  Color primaryColor = const Color(0xFF2196F3);
+
+  void updateProfile(userId, firstName, lastName, email) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
+  }
+
+  void updateEmail(String mail) {
+    email = mail;
+  }
+
+  void updateName(String last, String first) {
+    firstName = first;
+    lastName = last;
+  }
 
   void updateConfig(api, url) {
     apiKey = api;
     baseUrl = url;
+  }
+
+  String colorToHex(Color color) {
+    return '#${color.value.toRadixString(16).padLeft(8, '0')}';
+  }
+
+  Color hexToColor(String hexColor) {
+    final hexCode = hexColor.replaceAll('#', '');
+    return Color(int.parse('FF$hexCode', radix: 16));
+  }
+
+  void updatePath(userId) {
+    _firestore = FirebaseFirestore.instance
+        .collection('User')
+        .doc(userId)
+        .collection('saveChat');
+    _firestoreUser = FirebaseFirestore.instance.collection('User').doc(userId);
   }
 }
 

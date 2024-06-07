@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:pink_ai/main.dart';
+
 ThemeData darkMode() {
   return ThemeData(
     brightness: Brightness.dark,
-    primaryColor: Colors.blue,
+    primaryColor: primaryColorNotifier.value,
     indicatorColor: Colors.white,
     dividerColor: Colors.grey[800],
     canvasColor: Colors.grey[800],
@@ -11,7 +13,8 @@ ThemeData darkMode() {
     hintColor: Colors.grey[800],
     scaffoldBackgroundColor: Colors.black,
     textTheme: const TextTheme(
-      labelSmall: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400),
+      labelSmall: TextStyle(
+          color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400),
       labelMedium: TextStyle(color: Colors.white, fontSize: 14),
       titleMedium: TextStyle(
           color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),

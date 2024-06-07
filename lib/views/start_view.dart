@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pink_ai/components/logo/text_logo.dart';
 import 'package:pink_ai/config.dart';
+import 'package:pink_ai/main.dart';
 
 import 'home_view.dart';
 
@@ -14,9 +16,41 @@ class StartView extends StatefulWidget {
 
 class StartViewState extends State<StartView> {
   final docRef = FirebaseFirestore.instance.collection('gemini').doc('api');
+  final _firebaseUser = FirebaseFirestore.instance
+      .collection('User')
+      .doc(FirebaseAuth.instance.currentUser!.uid);
+
+  ThemeMode checkTheme(String theme) {
+    if (theme == 'ThemeMode.dark') {
+      return ThemeMode.dark;
+    } else if (theme == 'ThemeMode.light') {
+      return ThemeMode.light;
+    } else {
+      return ThemeMode.system;
+    }
+  }
+
+  Future<void> getProfile() async {
+    try {
+      final snapshot = await _firebaseUser.get();
+      final data = snapshot.data();
+      if (data == null) {
+        throw Exception('Data is null');
+      }
+      config.updateProfile(
+          data['userId'], data['fistName'], data['lastName'], data['email']);
+      primaryColorNotifier.value = config.hexToColor(data['primaryColor']);
+      themeModeNotifier.value = checkTheme(data['theme']);
+      config.updatePath(data['userId']);
+    } catch (e) {
+      return;
+    }
+  }
+
   Future<void> getAPI() async {
     try {
       final snapshot = await docRef.get();
+      await getProfile();
       final data = snapshot.data();
       if (data == null) {
         throw Exception('Data is null');
@@ -58,7 +92,7 @@ class StartViewState extends State<StartView> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-                child: TextLogo(context: context, text: 'Loading').textLogo());
+                child: TextLogo(context: context, text: 'Hello').textLogo());
           } else {
             return const SizedBox(); // Empty container as we are navigating to HomeView after API call
           }

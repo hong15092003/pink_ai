@@ -216,7 +216,8 @@ class OtherFunction {
                     ButtonIcon(
                       context: context,
                       icon: Icons.camera_alt_outlined,
-                      onPressed: () {},
+                      onPressed: () { 
+                      },
                     ).noBorder(),
                     ButtonIcon(
                       context: context,

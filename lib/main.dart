@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pink_ai/config.dart';
 
 import 'package:pink_ai/firebase_options.dart';
 import 'package:pink_ai/themes/dark_mode.dart';
@@ -19,36 +20,41 @@ Future<void> main() async {
   );
 
   runApp(
-    ValueListenableBuilder<ThemeMode>(
-      valueListenable: themeModeNotifier,
-      builder: (context, mode, child) {
-        mode = mode == ThemeMode.system
-            ? MediaQuery.platformBrightnessOf(context) == Brightness.light
-                ? ThemeMode.dark
-                : ThemeMode.light
-            : mode;
-        return MaterialApp(
-          routes: {
-            '/start': (context) => const StartView(),
-            '/home': (context) => const HomeView(),
-            '/login': (context) => const LoginView(),
-          },
-          debugShowCheckedModeBanner: false,
-          theme: lightMode(),
-          darkTheme: darkMode(),
-          themeMode: mode,
-          // initialRoute: '/auth',
-          home: AnnotatedRegion<SystemUiOverlayStyle>(
-            value: SystemUiOverlayStyle(
-              statusBarColor: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white
-                  : Colors.black, // Change this to the color you want
-            ),
-            child: const AuthGateWay(),
-          ),
-        );
-      },
-    ),
+    ValueListenableBuilder<Color>(
+        valueListenable: primaryColorNotifier,
+        builder: (context, snapshot, child) {
+          return ValueListenableBuilder<ThemeMode>(
+            valueListenable: themeModeNotifier,
+            builder: (context, mode, child) {
+              mode = mode == ThemeMode.system
+                  ? MediaQuery.platformBrightnessOf(context) == Brightness.light
+                      ? ThemeMode.dark
+                      : ThemeMode.light
+                  : mode;
+              return MaterialApp(
+                routes: {
+                  '/start': (context) => const StartView(),
+                  '/home': (context) => const HomeView(),
+                  '/login': (context) => const LoginView(),
+                },
+                debugShowCheckedModeBanner: false,
+                theme: lightMode(),
+                darkTheme: darkMode(),
+                themeMode: mode,
+                // initialRoute: '/auth',
+                home: AnnotatedRegion<SystemUiOverlayStyle>(
+                  value: SystemUiOverlayStyle(
+                    statusBarColor:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black, // Change this to the color you want
+                  ),
+                  child: const AuthGateWay(),
+                ),
+              );
+            },
+          );
+        }),
   );
 }
 
@@ -66,7 +72,7 @@ class _AuthGateWayState extends State<AuthGateWay> {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return const HomeView();
+          return const StartView();
         } else {
           return const LoginView();
         }
@@ -77,3 +83,5 @@ class _AuthGateWayState extends State<AuthGateWay> {
 
 final ValueNotifier<ThemeMode> themeModeNotifier =
     ValueNotifier(ThemeMode.system);
+final ValueNotifier<Color> primaryColorNotifier =
+    ValueNotifier(config.primaryColor);

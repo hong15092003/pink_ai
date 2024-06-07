@@ -1,71 +1,42 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pink_ai/config.dart';
 
 import 'package:pink_ai/models/chat_detail_model.dart';
 import 'package:pink_ai/models/chat_model.dart';
 
 class FirebaseController {
-  final _firestore = FirebaseFirestore.instance
-      .collection('User')
-      .doc(FirebaseAuth.instance.currentUser!.uid)
-      .collection('saveChat');
+  String chatId = '';
 
-  final _firestoreUser = FirebaseFirestore.instance
-      .collection('User')
-      .doc(FirebaseAuth.instance.currentUser!.uid);
-
-  void saveProfile(lastName, fistName) {
-    _firestoreUser.update(
+  void updateName(lastName, fistName) async {
+    await config.firestoreUser.update(
       {
         'lastName': lastName,
         'fistName': fistName,
       },
     );
+    config.updateName(lastName, fistName);
   }
 
   void saveTheme(String theme) {
-    _firestoreUser.update(
+    config.firestoreUser.update(
       {
         'theme': theme,
       },
     );
   }
 
-  Future<String> getName() async {
-    String name = '';
-    await _firestoreUser.get().then(
-      (value) {
-        name = value.data()!['fistName'] + ' ' + value.data()!['lastName'];
+  void updatePrimaryColor(String color) {
+    config.firestoreUser.update(
+      {
+        'primaryColor': color,
       },
     );
-    return name;
   }
 
-  Future<String> getEmail() async {
-    String email = '';
-    await _firestoreUser.get().then(
-      (value) {
-        email = value.data()!['email'];
-      },
-    );
-    return email;
-  }
-
-  Future<String> getTheme() async {
-    String theme = '';
-    _firestoreUser.get().then(
-      (value) {
-        theme = value.data()!['theme'];
-      },
-    );
-    return theme;
-  }
-
-  String idChat = '';
-
-  String formatId(String idChat) {
-    String idFormat = idChat.replaceAll(' ', '');
+  String formatId(String chatId) {
+    String idFormat = chatId.replaceAll(' ', '');
     idFormat = idFormat.replaceAll('-', '');
     idFormat = idFormat.replaceAll(':', '');
     idFormat = idFormat.split('.').first;
@@ -73,34 +44,34 @@ class FirebaseController {
   }
 
   createNewChat() {
-    idChat = '';
+    chatId = '';
   }
 
   void saveChat(ChatModel chat) {
-    String idChat = formatId(chat.time.toString());
-    if (idChat == '') {
-      idChat = idChat;
+    String responseId = formatId(chat.time.toString());
+    if (chatId == '') {
+      chatId = responseId;
       final chatDetail = ChatDetailModel(
-        id: idChat,
+        id: chatId,
         name: chat.text,
         startTime: chat.time,
         endTime: chat.time,
       ).toMap();
-      _firestore.doc(idChat).set(chatDetail);
+      config.firestore.doc(chatId).set(chatDetail);
     }
-    _firestore.doc(idChat).update({
+    config.firestore.doc(chatId).update({
       'endTime': chat.time,
     });
-    _firestore.doc(idChat).collection('chat').doc(idChat).set(chat.toMap());
+    config.firestore.doc(chatId).collection('chat').doc(responseId).set(chat.toMap());
   }
 
-  void deleteChat(id) {
-    _firestore.doc(id).delete();
+  void deleteChat(chatId) {
+    config.firestore.doc(chatId).delete();
   }
 
   Future<List<ChatDetailModel>> getListChat() async {
     List<ChatDetailModel> listChat = [];
-    await _firestore.orderBy('endTime', descending: true).get().then(
+    await config.firestore.orderBy('endTime', descending: true).get().then(
       (value) {
         for (var element in value.docs) {
           listChat.add(
@@ -116,7 +87,7 @@ class FirebaseController {
 
   Future<List<ChatModel>> getChat(itemId) async {
     List<ChatModel> chatList = [];
-    await _firestore.doc(itemId).collection('chat').get().then(
+    await config.firestore.doc(itemId).collection('chat').get().then(
       (value) {
         for (var element in value.docs) {
           ChatModel chat = ChatModel.fromMap(element.data());
@@ -129,7 +100,7 @@ class FirebaseController {
 
   Future<List<ChatDetailModel>> searchChat(String name) async {
     List<ChatDetailModel> listChat = [];
-    await _firestore.orderBy('endTime', descending: true).get().then(
+    await config.firestore.orderBy('endTime', descending: true).get().then(
       (value) {
         for (var element in value.docs) {
           if (element.data()['name'].contains(name)) {
@@ -148,10 +119,11 @@ class FirebaseController {
 
 // Auth Firebase Controller
 class AuthFirebase {
-  final _firestore = FirebaseFirestore.instance.collection('User');
+  
 
-  void saveAuth(String id, String fistName, String lastName, String email) {
-    _firestore.doc(id).set({
+  void saveAuth(String userId, String fistName, String lastName, String email) {
+    config.firestore.doc(userId).set({
+      'userId': userId,
       'lastName': lastName,
       'fistName': fistName,
       'email': email,
@@ -161,7 +133,7 @@ class AuthFirebase {
 
   Future<String> getAuth(String id) async {
     String name = '';
-    await _firestore.doc(id).get().then(
+    await config.firestore.doc(id).get().then(
       (value) {
         name = value.data()!['name'];
       },
@@ -201,8 +173,11 @@ class AuthFirebase {
       } else if (e.code == 'wrong-password') {
         return 'Sai mật khẩu. Vui lòng thử lại';
       }
+    } catch (e) {
+      debugPrint('Error: $e');
+      return 'Đã xảy ra lỗi. Vui lòng thử lại';
     }
-    return 'Không thể đăng nhập';
+    return 'Đã xảy ra lỗi. Vui lòng thử lại';
   }
 
   void signOut() async {
