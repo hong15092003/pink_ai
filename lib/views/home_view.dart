@@ -154,9 +154,13 @@ class BodyHome {
                     ? CrossAxisAlignment.end
                     : CrossAxisAlignment.start,
                 children: [
-                  MarkDown(
-                    content(index),
-                  ),
+                  content(index) == '....'
+                      ?  CircularProgressIndicator(
+                        color: Theme.of(context).primaryColor,
+                      )
+                      : MarkDown(
+                          content(index),
+                        ),
                 ],
               )),
         );
