@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pink_ai/models/api_config_model.dart';
 
 class Config {
-  String apiKey = "AIzaSyAxZBFmrxQGifumViAhMz-icNX2v2GvL0k";
-  String baseUrl =
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=";
+  String _apiKey = "AIzaSyAxZBFmrxQGifumViAhMz-icNX2v2GvL0k";
+  String _model = "gemini-1.5-pro";
+  String _version = "v1beta";
+  String _model1 = "gemini-1.5-pro";
+  String _model2 = "gemini-1.5-flash";
+  String _headerUrl = "https://generativelanguage.googleapis.com";
   final Map<String, dynamic> body = {
     "contents": [],
     "generationConfig": {
@@ -33,6 +37,10 @@ class Config {
       }
     ]
   };
+
+  get baseUrl =>
+      "$_headerUrl/$_version/models/$_model:generateContent?key=$_apiKey";
+
   String firstName = 'User';
   String lastName = 'Guest';
   String email = '';
@@ -59,9 +67,36 @@ class Config {
     lastName = last;
   }
 
-  void updateConfig(api, url) {
-    apiKey = api;
-    baseUrl = url;
+  void updateConfig(ApiConfigModel apiConfigModel) {
+    _apiKey = apiConfigModel.apiKey;
+    _model = apiConfigModel.model;
+    _model1 = apiConfigModel.model1;
+    _model2 = apiConfigModel.model2;
+    _version = apiConfigModel.version;
+    _headerUrl = apiConfigModel.headerUrl;
+  }
+
+  void switchModel(int index) {
+    if (index == 1) {
+      _model = _model1;
+    } else if (index == 2){
+      _model = _model2;
+    }
+    else{
+      _model = _model;
+    }
+  }
+
+  String getModelName(index){
+    if(index == 1){
+      return _model1;
+    }
+    else if(index == 2){
+      return _model2;
+    }
+    else{
+      return _model;
+    }
   }
 
   String colorToHex(Color color) {

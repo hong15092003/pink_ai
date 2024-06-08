@@ -113,6 +113,9 @@ class Bottom {
               onTap: onTap,
               context: context,
               textEditingController: searchController,
+              onChanged: (_){
+                historyController.searchChat(_);
+              },
               suffix: ButtonIcon(
                   context: context,
                   icon: Icons.search_rounded,
@@ -133,29 +136,21 @@ class BottomSettings {
   BottomSettings({required this.context, required this.display});
   Widget view() {
     return ValueListenableBuilder(
-        valueListenable: display,
-        builder: (context, value, child) {
-          if (value) {
-            return Builder(builder: (context) {
-              return BottomSheet(
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  onClosing: () {},
-                  animationController: AnimationController(
-                    vsync: Navigator.of(context),
-                    duration: const Duration(milliseconds: 1000),
-                    reverseDuration: const Duration(milliseconds: 1000),
-                  ),
-                  onDragStart: (details) => (),
-                  onDragEnd: (details, {required isClosing}) {
-                    display.value = false;
-                  },
-                  builder: (context) {
-                    return SettingsView(display: display);
-                  });
-            });
-          } else {
-            return const SizedBox();
-          }
-        });
+      valueListenable: display,
+      builder: (context, value, child) {
+        return Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 400),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return ScaleTransition(scale: animation, child: child);
+            },
+            child: display.value
+                ? SettingsView(display: display, key: const ValueKey(1))
+                : const SizedBox(),
+          ),
+        );
+      },
+    );
   }
 }

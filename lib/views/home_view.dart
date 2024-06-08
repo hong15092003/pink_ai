@@ -5,6 +5,7 @@ import 'package:pink_ai/components/button/icon_button.dart';
 import 'package:pink_ai/components/button/text_button.dart';
 import 'package:pink_ai/components/logo/text_logo.dart';
 import 'package:pink_ai/components/text_filed/text_box.dart';
+import 'package:pink_ai/config.dart';
 import 'package:pink_ai/controllers/api_controller.dart';
 import 'package:pink_ai/controllers/home_controller.dart';
 import 'package:pink_ai/models/chat_model.dart';
@@ -41,6 +42,13 @@ class _HomeViewState extends State<HomeView> {
               alignment: Alignment.bottomCenter,
               child: Bottom(context: context).view(),
             ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Container(
+                  margin: const EdgeInsets.only(bottom: 70),
+                  height: 50,
+                  child: Ideas().view()),
+            ),
           ],
         ),
       ),
@@ -54,6 +62,7 @@ class Top {
 
   AppBar view() {
     return AppBar(
+        surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: Builder(
           builder: (context) => ButtonIcon(
@@ -177,12 +186,12 @@ class Bottom {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          OtherFunction().view(),
+          const OtherFunction(),
           const SizedBox(width: 10),
           Expanded(
               child: TextBox(
             context: context,
-            textEditingController: homeController.textEditingController,
+            textEditingController: homeController.textEditingController.value,
             onTap: homeController.displayOtherFunction,
             suffix: ButtonIcon(
                 context: context,
@@ -195,45 +204,54 @@ class Bottom {
   }
 }
 
-class OtherFunction {
-  Widget view() {
+class OtherFunction extends StatefulWidget {
+  const OtherFunction({super.key});
+
+  @override
+  State<OtherFunction> createState() => _OtherFunctionState();
+}
+
+class _OtherFunctionState extends State<OtherFunction> {
+  @override
+  Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: homeController.displayOtherFunction,
       builder: (context, value, child) {
-        return value
-            ? ButtonIcon(
-                key: const ValueKey('addButton'),
+        return AnimatedCrossFade(
+          firstChild: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ButtonIcon(
+              key: const ValueKey('addButton'),
+              context: context,
+              icon: Icons.add_rounded,
+              onPressed: () {},
+            ).circleBorder(),
+          ),
+          secondChild: Wrap(
+            children: [
+              ButtonIcon(
                 context: context,
-                icon: Icons.add_rounded,
+                icon: Icons.camera_alt_outlined,
                 onPressed: () {},
-              ).circleBorder()
-            : Container(
-                key: const ValueKey('otherFunctionButtons'),
-                color: Theme.of(context).scaffoldBackgroundColor,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ButtonIcon(
-                      context: context,
-                      icon: Icons.camera_alt_outlined,
-                      onPressed: () { 
-                      },
-                    ).noBorder(),
-                    ButtonIcon(
-                      context: context,
-                      icon: Icons.image_outlined,
-                      onPressed: () {
-                        vision.pickImage();
-                      },
-                    ).noBorder(),
-                    ButtonIcon(
-                      context: context,
-                      icon: Icons.folder_outlined,
-                      onPressed: () {},
-                    ).noBorder(),
-                  ],
-                ),
-              );
+              ).noBorder(),
+              ButtonIcon(
+                context: context,
+                icon: Icons.image_outlined,
+                onPressed: () {
+                  vision.pickImage();
+                },
+              ).noBorder(),
+              ButtonIcon(
+                context: context,
+                icon: Icons.folder_outlined,
+                onPressed: () {},
+              ).noBorder(),
+            ],
+          ),
+          crossFadeState:
+              value ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+          duration: const Duration(milliseconds: 100),
+        );
       },
     );
   }
@@ -249,14 +267,66 @@ class Popup {
     final centerWidth = fullWidth / 2;
 
     showMenu(
+      shadowColor: Colors.transparent,
       context: context,
       color: Theme.of(context).scaffoldBackgroundColor,
       popUpAnimationStyle: AnimationStyle(reverseCurve: Curves.easeInOut),
-      position: RelativeRect.fromLTRB(centerWidth - 40, 50, centerWidth, 0),
+      position: RelativeRect.fromLTRB(centerWidth - 60, 50, centerWidth, 0),
       items: [
-        const PopupMenuItem(child: Text('Option 1')),
-        const PopupMenuItem(child: Text('Option 2')),
+        PopupMenuItem(
+          child: ButtonText(
+              context: context,
+              text: config.getModelName(1),
+              onPressed: () {
+                config.switchModel(1);
+              }).noBorder(),
+        ),
+        PopupMenuItem(
+          child: ButtonText(
+              context: context,
+              text: config.getModelName(2),
+              onPressed: () {
+                config.switchModel(2);
+              }).noBorder(),
+        ),
       ],
     );
+  }
+}
+
+class Ideas {
+  List<String> ideas = [
+    'Tại sao 1 + 1 = 2 ?',
+    'Quy tắc bàn tay phải ?',
+    'Viết 1 đoạn văn về nobita.',
+    'Thành phần của thuốc nổ',
+    'Công thức hóa học của nước ?',
+  ];
+  Widget view() {
+    return ValueListenableBuilder(
+        valueListenable: homeController.textEditingController.value,
+        builder: (context, snapshot, child) {
+          return Visibility(
+            visible: snapshot.text.isEmpty && homeController.chatList.isEmpty,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: ideas.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  padding: const EdgeInsets.all(5),
+                  margin: const EdgeInsets.only(left: 10),
+                  child: ButtonText(
+                    context: context,
+                    text: ideas[index],
+                    onPressed: () {
+                      homeController.textEditingController.value.text =
+                          ideas[index];
+                    },
+                  ).rectangle(),
+                );
+              },
+            ),
+          );
+        });
   }
 }

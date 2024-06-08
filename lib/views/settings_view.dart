@@ -233,16 +233,22 @@ class ColorPicker {
             children: [
               const Text('Màu chủ đề',
                   style: TextStyle(fontWeight: FontWeight.bold)),
-              IconButton(
-                style: ButtonStyle(
-                  shape: WidgetStateProperty.all(
-                    const CircleBorder(),
-                  ),
+              Container(
+                margin: const EdgeInsets.only(right: 10),
+                height: 25,
+                width: 25,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: primaryColorNotifier.value,
+                  boxShadow: [
+                    BoxShadow(
+                      color: primaryColorNotifier.value,
+                      blurRadius: 5.0,
+                      spreadRadius: 0.0,
+                    )
+                  ],
                 ),
-                icon: const Icon(Icons.circle),
-                color: Theme.of(context).primaryColor,
-                onPressed: () {},
-              )
+              ),
             ],
           ),
           Expanded(
@@ -254,19 +260,27 @@ class ColorPicker {
                 shrinkWrap: true,
                 itemCount: colors.length,
                 itemBuilder: (context, index) {
-                  return IconButton(
-                    style: ButtonStyle(
-                      shape: WidgetStateProperty.all(
-                        const CircleBorder(),
+                  return GestureDetector(
+                    onTap: () {
+                      primaryColorNotifier.value = colors[index];
+                      firebaseController.updatePrimaryColor(colors[index]);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 5, right: 5),
+                      height: 25,
+                      width: 25,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: colors[index],
+                        boxShadow: [
+                          BoxShadow(
+                            color: colors[index],
+                            blurRadius: 5.0,
+                            spreadRadius: 0.0,
+                          )
+                        ],
                       ),
                     ),
-                    icon: const Icon(Icons.circle),
-                    color: colors[index],
-                    onPressed: () {
-                      primaryColorNotifier.value = colors[index];
-                      String color = config.colorToHex(colors[index]);
-                      firebaseController.updatePrimaryColor(color);
-                    },
                   );
                 },
               ),

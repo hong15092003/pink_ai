@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pink_ai/components/logo/text_logo.dart';
 import 'package:pink_ai/config.dart';
 import 'package:pink_ai/main.dart';
+import 'package:pink_ai/models/api_config_model.dart';
 
 import 'home_view.dart';
 
@@ -53,10 +54,12 @@ class StartViewState extends State<StartView> {
       await getProfile();
       final data = snapshot.data();
       if (data == null) {
-        throw Exception('Data is null');
+        // throw Exception('Data is null');
       }
-      config.updateConfig(data['key'], data['baseUrl']);
+
       if (mounted) {
+        ApiConfigModel apiConfigModel = ApiConfigModel.fromMap(data!);
+        config.updateConfig(apiConfigModel);
         Navigator.of(context).pushReplacement(_createRoute());
       }
     } catch (e) {

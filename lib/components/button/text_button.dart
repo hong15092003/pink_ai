@@ -37,7 +37,8 @@ class ButtonText {
       ),
     );
   }
-   Widget rectangle() {
+
+  Widget rectangle() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       height: 35,
@@ -67,12 +68,10 @@ class ButtonText {
   Widget noBorder() {
     return TextButton(
       onPressed: onPressed,
-      child: Text(
-        text,
-        style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-              color: Theme.of(context).primaryColor,
-        )
-      ),
+      child: Text(text,
+          style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                color: Theme.of(context).primaryColor,
+              )),
     );
   }
 }

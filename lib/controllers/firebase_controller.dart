@@ -27,10 +27,11 @@ class FirebaseController {
     );
   }
 
-  void updatePrimaryColor(String color) {
+  void updatePrimaryColor(Color color) {
+    
     config.firestoreUser.update(
       {
-        'primaryColor': color,
+        'primaryColor': config.colorToHex(color),
       },
     );
   }

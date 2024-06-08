@@ -7,12 +7,14 @@ import 'package:pink_ai/controllers/home_controller.dart';
 class TextBox {
   final Widget? suffix;
   ValueNotifier? onTap;
+  Function? onChanged;
   final TextEditingController textEditingController;
   final BuildContext context;
 
   TextBox({
     this.onTap,
     this.suffix,
+    this.onChanged,
     required this.textEditingController,
     required this.context,
   });
@@ -72,7 +74,9 @@ class TextBox {
           minLines: 1,
           maxLines: 4,
           textInputAction: Platform.isIOS ? TextInputAction.done : TextInputAction.none,
-          onChanged: (_) {},
+          onChanged: (_) {
+            if(onChanged != null) onChanged!(_);
+          },
           onTap: () {
             onTap!.value = true;
           },

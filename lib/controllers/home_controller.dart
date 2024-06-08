@@ -8,10 +8,12 @@ import 'package:pink_ai/models/chat_model.dart';
 
 class HomeController {
   //Biến hiển thị hoặc ẩn OtherFn
-  final displayOtherFunction = ValueNotifier<bool>(true);
+  final displayOtherFunction = ValueNotifier<bool>(false);
 
   // Biến kiểm soát textbox của người dùng
-  final TextEditingController textEditingController = TextEditingController();
+  // final TextEditingController textEditingController = TextEditingController();
+  ValueNotifier<TextEditingController> textEditingController =
+      ValueNotifier<TextEditingController>(TextEditingController());
   // danh sách chat
   List<ChatModel> chatList = [];
   final _chatListStreamController = StreamController<List<ChatModel>>();
@@ -20,8 +22,8 @@ class HomeController {
   final ScrollController scrollController = ScrollController();
 
   void getContent() {
-    String content = textEditingController.text;
-    textEditingController.clear();
+    String content = textEditingController.value.text;
+    textEditingController.value.clear();
     content = content.trimLeft();
     if (content.isEmpty) return;
     pushContent(content, 'user');

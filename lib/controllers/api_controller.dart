@@ -9,13 +9,12 @@ import 'package:pink_ai/controllers/home_controller.dart';
 import 'package:pink_ai/models/gemini_chat_model.dart';
 
 class GeminiChatController {
-  final String _apiKey = config.apiKey;
-  final String _baseUrl = config.baseUrl;
+
   Map<String, dynamic> body = config.body;
 
   void generateContent(text) async {
     handleAfterCallAPI(text);
-    final response = await http.post(Uri.parse(_baseUrl + _apiKey),
+    final response = await http.post(Uri.parse(config.baseUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
