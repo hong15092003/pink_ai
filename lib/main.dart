@@ -2,18 +2,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pink_ai/config.dart';
 
+import 'package:pink_ai/config.dart';
 import 'package:pink_ai/firebase_options.dart';
 import 'package:pink_ai/themes/dark_mode.dart';
 import 'package:pink_ai/themes/light_mode.dart';
-
-import 'package:pink_ai/views/home_view.dart';
 import 'package:pink_ai/views/login_view.dart';
-
 import 'package:pink_ai/views/start_view.dart';
 
 Future<void> main() async {
+  // if (kIsWeb) {
+  //     String operatingSystem = kIsWeb ? 'web' : Platform.operatingSystem;
+  //   print('Running on the web!');
+  // } else {
+  //   print('Running on a mobile platform!');
+  // }
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -32,11 +35,6 @@ Future<void> main() async {
                       : ThemeMode.light
                   : mode;
               return MaterialApp(
-                routes: {
-                  '/start': (context) => const StartView(),
-                  '/home': (context) => const HomeView(),
-                  '/login': (context) => const LoginView(),
-                },
                 debugShowCheckedModeBanner: false,
                 theme: lightMode(),
                 darkTheme: darkMode(),

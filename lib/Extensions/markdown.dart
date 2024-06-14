@@ -3,32 +3,37 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 
 class MarkDown extends StatelessWidget {
   final String _data;
-  const MarkDown(this._data, {super.key});
+  final Color? color;
+
+  const MarkDown(this._data, {super.key, this.color});
   @override
   Widget build(BuildContext context) {
+     TextStyle textSytyle = Theme.of(context).textTheme.labelSmall!.copyWith(
+        color: color ?? Theme.of(context).textTheme.labelSmall!.color,
+      );
     return MarkdownBody(
       onSelectionChanged: (a, b, c) => (),
       selectable: true,
       data: _data,
       styleSheet: MarkdownStyleSheet(
-        a: Theme.of(context).textTheme.labelSmall,
-        p: Theme.of(context).textTheme.labelSmall,
-        code: Theme.of(context).textTheme.labelSmall,
-        h1: Theme.of(context).textTheme.labelSmall,
-        h2: Theme.of(context).textTheme.labelSmall,
-        h3: Theme.of(context).textTheme.labelSmall,
-        h4: Theme.of(context).textTheme.labelSmall,
-        h5: Theme.of(context).textTheme.labelSmall,
-        h6: Theme.of(context).textTheme.labelSmall,
-        em: Theme.of(context).textTheme.labelSmall,
-        strong: Theme.of(context).textTheme.labelSmall,
-        del: Theme.of(context).textTheme.labelSmall,
-        blockquote: Theme.of(context).textTheme.labelSmall,
-        img: Theme.of(context).textTheme.labelSmall,
-        checkbox: Theme.of(context).textTheme.labelSmall,
-        tableHead: Theme.of(context).textTheme.labelSmall,
-        tableBody: Theme.of(context).textTheme.labelSmall,
-        listBullet: Theme.of(context).textTheme.labelSmall,
+        a: textSytyle,
+        p: textSytyle,
+        code: textSytyle,
+        h1: textSytyle,
+        h2: textSytyle,
+        h3: textSytyle,
+        h4: textSytyle,
+        h5: textSytyle,
+        h6: textSytyle,
+        em: textSytyle,
+        strong: textSytyle,
+        del: textSytyle,
+        blockquote: textSytyle,
+        img: textSytyle,
+        checkbox: textSytyle,
+        tableHead: textSytyle,
+        tableBody: textSytyle,
+        listBullet: textSytyle,
         codeblockDecoration: BoxDecoration(
           color: Colors.grey[900],
           borderRadius: BorderRadius.circular(5),

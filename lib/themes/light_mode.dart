@@ -4,6 +4,7 @@ import 'package:pink_ai/main.dart';
 
 ThemeData lightMode() {
   return ThemeData(
+     fontFamily: 'Lato',
     brightness: Brightness.light,
     primaryColor: primaryColorNotifier.value,
     indicatorColor: Colors.white,

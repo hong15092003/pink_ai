@@ -88,7 +88,7 @@ class Top {
           context: context,
           icon: Icons.arrow_forward_ios_rounded,
           onPressed: () {
-            Scaffold.of(context).openEndDrawer();
+            Navigator.pop(context);
           },
         ).noBorder(),
       ],
@@ -113,7 +113,7 @@ class Bottom {
               onTap: onTap,
               context: context,
               textEditingController: searchController,
-              onChanged: (_){
+              onChanged: (_) {
                 historyController.searchChat(_);
               },
               suffix: ButtonIcon(
@@ -141,7 +141,7 @@ class BottomSettings {
         return Container(
           color: Theme.of(context).scaffoldBackgroundColor,
           child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 400),
+            duration: const Duration(milliseconds: 200),
             transitionBuilder: (Widget child, Animation<double> animation) {
               return ScaleTransition(scale: animation, child: child);
             },

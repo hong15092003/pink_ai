@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:pink_ai/components/button/text_button.dart';
+import 'package:pink_ai/components/popup/my_popup.dart';
 import 'package:pink_ai/controllers/firebase_controller.dart';
 
 class LoginRegisterController {
@@ -13,7 +12,7 @@ class LoginRegisterController {
     if (status == 'Success') {
       return;
     } else {
-      dialog(context, status);
+       MyPopup().dialog(context, status);
     }
   }
 
@@ -26,7 +25,7 @@ class LoginRegisterController {
     if (status == 'Success') {
       return;
     } else {
-      dialog(context, status);
+      MyPopup().dialog(context, status);
     }
   }
 
@@ -78,27 +77,7 @@ class LoginRegisterController {
     authFirebase.signOut();
   }
 
-  void dialog(context, status) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          // title: const Text('Lỗi'),
-          content: Text(status),
-          actions: <Widget>[
-            ButtonText(
-              context: context,
-              text: 'Đóng',
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ).noBorder(),
-          ],
-        );
-      },
-    );
-  }
+ 
 }
 
 LoginRegisterController loginRegisterController = LoginRegisterController();

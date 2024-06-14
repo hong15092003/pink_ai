@@ -4,9 +4,10 @@ import 'package:pink_ai/Extensions/markdown.dart';
 import 'package:pink_ai/components/button/icon_button.dart';
 import 'package:pink_ai/components/button/text_button.dart';
 import 'package:pink_ai/components/logo/text_logo.dart';
+import 'package:pink_ai/components/popup/my_popup.dart';
 import 'package:pink_ai/components/text_filed/text_box.dart';
-import 'package:pink_ai/config.dart';
-import 'package:pink_ai/controllers/api_controller.dart';
+
+
 import 'package:pink_ai/controllers/home_controller.dart';
 import 'package:pink_ai/models/chat_model.dart';
 import 'package:pink_ai/views/drawer_view.dart';
@@ -21,36 +22,85 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        if (constraints.maxWidth > 700) {
+          // return buildWideLayout();
+          return buildNarrowLayout();
+        } else {
+          return buildNarrowLayout();
+        }
+      },
+    );
+  }
+
+  Widget buildNarrowLayout() {
     return Scaffold(
       appBar: Top(context: context).view(),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      drawer: const SizedBox(width: 300, child: DrawerView()),
+      drawer: const SizedBox(
+        width: 300,
+        child: DrawerView(),
+      ),
       bottomNavigationBar: const SizedBox(height: 20),
-      body: Center(
-        child: Stack(
-          children: [
-            TextLogo(context: context, text: 'PIAI').textLogo(),
-            Align(
-              alignment: Alignment.center,
-              child: StreamBuilder<List<ChatModel>>(
-                  stream: homeController.chatListStream,
-                  builder: (context, snapshot) {
-                    return BodyHome(list: homeController.chatList).view();
-                  }),
+      body: buildBody(),
+    );
+  }
+
+  Widget buildWideLayout() {
+    bool isDrawerOpen = true;
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: Row(
+        children: [
+          Visibility(
+            visible: isDrawerOpen,
+            child: const SizedBox(
+              width: 300,
+              child: DrawerView(),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Bottom(context: context).view(),
+          ),
+          VerticalDivider(
+            color: Theme.of(context).primaryColor.withOpacity(0.3),
+            thickness: 1,
+          ),
+          Expanded(
+            child: Scaffold(
+              appBar: Top(context: context).view(),
+              bottomNavigationBar: const SizedBox(height: 20),
+              body: buildBody(),
             ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Container(
-                  margin: const EdgeInsets.only(bottom: 70),
-                  height: 50,
-                  child: Ideas().view()),
-            ),
-          ],
-        ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildBody() {
+    return Center(
+      child: Stack(
+        children: [
+          TextLogo(context: context, text: 'PIAI').textLogo(),
+          Align(
+            alignment: Alignment.center,
+            child: ValueListenableBuilder(
+                valueListenable: homeController.chatList,
+                builder: (context, value, child) {
+                  return BodyHome(list: value).view();
+                }),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Bottom(context: context).view(),
+          ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Container(
+                margin: const EdgeInsets.only(bottom: 70),
+                height: 50,
+                child: Ideas().view()),
+          ),
+        ],
       ),
     );
   }
@@ -67,14 +117,18 @@ class Top {
         leading: Builder(
           builder: (context) => ButtonIcon(
             context: context,
-            icon: Icons.arrow_back_ios_new_outlined,
-            onPressed: () => Scaffold.of(context).openDrawer(),
+            icon: Icons.arrow_back_ios_rounded,
+            onPressed: () {
+              if (Scaffold.of(context).hasDrawer) {
+                Scaffold.of(context).openDrawer();
+              }
+            },
           ).noBorder(),
         ),
         title: ButtonText(
           context: context,
           text: 'home',
-          onPressed: () => Popup(context: context).menu(),
+          onPressed: () => MyPopup().chooseModel(context),
         ).circle(),
         actions: [
           ButtonIcon(
@@ -90,7 +144,7 @@ class BodyHome {
   List<ChatModel> list;
   BodyHome({required this.list});
 
-  bool checkRoleUser(int index) {
+  bool isRoleUser(int index) {
     try {
       return list[index].role == 'user';
     } catch (e) {
@@ -111,7 +165,37 @@ class BodyHome {
     try {
       return list[index].text;
     } catch (e) {
-      return '....'; // Return a default value
+      return '.../__piai_reponse'; // Return a default value
+    }
+  }
+
+  Widget chatContent(context, index) {
+    if (content(index) == '.../__piai_reponse') {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const MarkDown(
+            "Đang phản hồi",
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 10),
+            height: 20,
+            width: 20,
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ],
+      );
+    } else {
+      if (isRoleUser(index)) {
+        return MarkDown(
+          content(index),
+          color: Colors.white,
+        );
+      } else {
+        return MarkDown(content(index));
+      }
     }
   }
 
@@ -123,24 +207,23 @@ class BodyHome {
       itemCount: length + chating(length),
       itemBuilder: (context, index) {
         return Align(
-          alignment: checkRoleUser(index)
-              ? Alignment.centerRight
-              : Alignment.centerLeft,
+          alignment:
+              isRoleUser(index) ? Alignment.centerRight : Alignment.centerLeft,
           child: Container(
-              margin: checkRoleUser(index)
+              margin: isRoleUser(index)
                   ? const EdgeInsets.only(
                       top: 10, left: 60, right: 10, bottom: 10)
                   : const EdgeInsets.only(
                       top: 10, left: 10, right: 60, bottom: 10),
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                color: checkRoleUser(index)
+                color: isRoleUser(index)
                     ? Theme.of(context).primaryColor
                     : Theme.of(context).scaffoldBackgroundColor,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: checkRoleUser(index)
+                    color: isRoleUser(index)
                         ? Theme.of(context).primaryColor
                         : Theme.of(context).shadowColor,
                     blurRadius: 5.0,
@@ -150,18 +233,10 @@ class BodyHome {
                 ],
               ),
               child: Column(
-                crossAxisAlignment: checkRoleUser(index)
+                crossAxisAlignment: isRoleUser(index)
                     ? CrossAxisAlignment.end
                     : CrossAxisAlignment.start,
-                children: [
-                  content(index) == '....'
-                      ?  CircularProgressIndicator(
-                        color: Theme.of(context).primaryColor,
-                      )
-                      : MarkDown(
-                          content(index),
-                        ),
-                ],
+                children: [chatContent(context, index)],
               )),
         );
       },
@@ -236,19 +311,23 @@ class _OtherFunctionState extends State<OtherFunction> {
               ButtonIcon(
                 context: context,
                 icon: Icons.camera_alt_outlined,
-                onPressed: () {},
+                onPressed: () {
+                  MyPopup().dialog(context, 'Tính năng đang được phát triển');
+                },
               ).noBorder(),
               ButtonIcon(
                 context: context,
                 icon: Icons.image_outlined,
                 onPressed: () {
-                  vision.pickImage();
+                  MyPopup().dialog(context, 'Tính năng đang được phát triển');
                 },
               ).noBorder(),
               ButtonIcon(
                 context: context,
                 icon: Icons.folder_outlined,
-                onPressed: () {},
+                onPressed: () {
+                  MyPopup().dialog(context, 'Tính năng đang được phát triển');
+                },
               ).noBorder(),
             ],
           ),
@@ -257,43 +336,6 @@ class _OtherFunctionState extends State<OtherFunction> {
           duration: const Duration(milliseconds: 100),
         );
       },
-    );
-  }
-}
-
-class Popup {
-  final BuildContext context;
-
-  Popup({required this.context});
-
-  void menu() {
-    final fullWidth = MediaQuery.of(context).size.width;
-    final centerWidth = fullWidth / 2;
-
-    showMenu(
-      shadowColor: Colors.transparent,
-      context: context,
-      color: Theme.of(context).scaffoldBackgroundColor,
-      popUpAnimationStyle: AnimationStyle(reverseCurve: Curves.easeInOut),
-      position: RelativeRect.fromLTRB(centerWidth - 60, 50, centerWidth, 0),
-      items: [
-        PopupMenuItem(
-          child: ButtonText(
-              context: context,
-              text: config.getModelName(1),
-              onPressed: () {
-                config.switchModel(1);
-              }).noBorder(),
-        ),
-        PopupMenuItem(
-          child: ButtonText(
-              context: context,
-              text: config.getModelName(2),
-              onPressed: () {
-                config.switchModel(2);
-              }).noBorder(),
-        ),
-      ],
     );
   }
 }
@@ -311,7 +353,8 @@ class Ideas {
         valueListenable: homeController.textEditingController.value,
         builder: (context, snapshot, child) {
           return Visibility(
-            visible: snapshot.text.isEmpty && homeController.chatList.isEmpty,
+            visible:
+                snapshot.text.isEmpty && homeController.chatList.value.isEmpty,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: ideas.length,

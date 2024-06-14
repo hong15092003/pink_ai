@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pink_ai/models/api_config_model.dart';
 
 class Config {
-  String _apiKey = "AIzaSyAxZBFmrxQGifumViAhMz-icNX2v2GvL0k";
+  String _apiKey = "";
   String _model = "gemini-1.5-pro";
   String _version = "v1beta";
   String _model1 = "gemini-1.5-pro";
@@ -13,9 +13,9 @@ class Config {
     "contents": [],
     "generationConfig": {
       "temperature": 1,
-      "topK": 10,
+      "topK": 64,
       "topP": 1,
-      "maxOutputTokens": 2048,
+      "maxOutputTokens": 8192,
       "stopSequences": []
     },
     "safetySettings": [
@@ -44,11 +44,13 @@ class Config {
   String firstName = 'User';
   String lastName = 'Guest';
   String email = '';
-  dynamic _firestore;
+  dynamic _firestoreSaveData;
   dynamic _firestoreUser;
+  final _firestore = FirebaseFirestore.instance;
 
-  get firestore => _firestore;
+  get firestoreSaveData => _firestoreSaveData;
   get firestoreUser => _firestoreUser;
+  get firestore => _firestore;
 
   Color primaryColor = const Color(0xFF2196F3);
 
@@ -109,11 +111,11 @@ class Config {
   }
 
   void updatePath(userId) {
-    _firestore = FirebaseFirestore.instance
+    _firestoreSaveData = _firestore
         .collection('User')
         .doc(userId)
         .collection('saveChat');
-    _firestoreUser = FirebaseFirestore.instance.collection('User').doc(userId);
+    _firestoreUser = _firestore.collection('User').doc(userId);
   }
 }
 

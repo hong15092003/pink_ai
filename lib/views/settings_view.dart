@@ -73,7 +73,7 @@ class _SettingsViewState extends State<SettingsView> {
               icon: Icons.logout,
               onPressed: () {
                 loginRegisterController.signOut();
-                Navigator.pushReplacementNamed(context, '/login');
+                // Navigator.pushReplacementNamed(context, '/login');
               }).noBorder(),
         ).view(),
       ],

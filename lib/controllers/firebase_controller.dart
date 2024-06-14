@@ -1,5 +1,5 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:pink_ai/config.dart';
 
@@ -28,7 +28,6 @@ class FirebaseController {
   }
 
   void updatePrimaryColor(Color color) {
-    
     config.firestoreUser.update(
       {
         'primaryColor': config.colorToHex(color),
@@ -58,21 +57,28 @@ class FirebaseController {
         startTime: chat.time,
         endTime: chat.time,
       ).toMap();
-      config.firestore.doc(chatId).set(chatDetail);
+      config.firestoreSaveData.doc(chatId).set(chatDetail);
     }
-    config.firestore.doc(chatId).update({
+    config.firestoreSaveData.doc(chatId).update({
       'endTime': chat.time,
     });
-    config.firestore.doc(chatId).collection('chat').doc(responseId).set(chat.toMap());
+    config.firestoreSaveData
+        .doc(chatId)
+        .collection('chat')
+        .doc(responseId)
+        .set(chat.toMap());
   }
 
   void deleteChat(chatId) {
-    config.firestore.doc(chatId).delete();
+    config.firestoreSaveData.doc(chatId).delete();
   }
 
   Future<List<ChatDetailModel>> getListChat() async {
     List<ChatDetailModel> listChat = [];
-    await config.firestore.orderBy('endTime', descending: true).get().then(
+    await config.firestoreSaveData
+        .orderBy('endTime', descending: true)
+        .get()
+        .then(
       (value) {
         for (var element in value.docs) {
           listChat.add(
@@ -88,7 +94,7 @@ class FirebaseController {
 
   Future<List<ChatModel>> getChat(itemId) async {
     List<ChatModel> chatList = [];
-    await config.firestore.doc(itemId).collection('chat').get().then(
+    await config.firestoreSaveData.doc(itemId).collection('chat').get().then(
       (value) {
         for (var element in value.docs) {
           ChatModel chat = ChatModel.fromMap(element.data());
@@ -101,7 +107,10 @@ class FirebaseController {
 
   Future<List<ChatDetailModel>> searchChat(String name) async {
     List<ChatDetailModel> listChat = [];
-    await config.firestore.orderBy('endTime', descending: true).get().then(
+    await config.firestoreSaveData
+        .orderBy('endTime', descending: true)
+        .get()
+        .then(
       (value) {
         for (var element in value.docs) {
           if (element.data()['name'].contains(name)) {
@@ -120,21 +129,20 @@ class FirebaseController {
 
 // Auth Firebase Controller
 class AuthFirebase {
-  
-
   void saveAuth(String userId, String fistName, String lastName, String email) {
-    config.firestore.doc(userId).set({
+    config.firestore.collection('User').doc(userId).set({
       'userId': userId,
       'lastName': lastName,
       'fistName': fistName,
       'email': email,
+      'primaryColor': '#0xFF2196F3', // Màu mặc định là màu xanh dương
       'theme': ThemeMode.system.toString(),
     });
   }
 
   Future<String> getAuth(String id) async {
     String name = '';
-    await config.firestore.doc(id).get().then(
+    await config.firestoreSaveData.doc(id).get().then(
       (value) {
         name = value.data()!['name'];
       },
@@ -173,6 +181,8 @@ class AuthFirebase {
         return 'Không tìm thấy tài khoản';
       } else if (e.code == 'wrong-password') {
         return 'Sai mật khẩu. Vui lòng thử lại';
+      } else if (e.code == 'invalid-credential') {
+        return 'Thông tin xác thực không hợp lệ hoặc đã hết hạn';
       }
     } catch (e) {
       debugPrint('Error: $e');

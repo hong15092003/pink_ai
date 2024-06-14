@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pink_ai/controllers/home_controller.dart';
@@ -73,9 +71,9 @@ class TextBox {
           controller: textEditingController,
           minLines: 1,
           maxLines: 4,
-          textInputAction: Platform.isIOS ? TextInputAction.done : TextInputAction.none,
+          textInputAction: TextInputAction.done,
           onChanged: (_) {
-            if(onChanged != null) onChanged!(_);
+            if (onChanged != null) onChanged!(_);
           },
           onTap: () {
             onTap!.value = true;
@@ -125,7 +123,7 @@ class TextBox {
           controller: textEditingController,
           maxLines: 1,
 
-          textInputAction: Platform.isIOS ? TextInputAction.done : TextInputAction.none,
+          textInputAction: TextInputAction.done,
           // onChanged: (_) {
           //   print(_);
           // },
@@ -170,7 +168,7 @@ class TextBox {
           controller: textEditingController,
           maxLines: 1,
 
-         textInputAction: Platform.isIOS ? TextInputAction.done : TextInputAction.none,
+          textInputAction: TextInputAction.done,
           // onChanged: (_) {
           //   print(_);
           // },
