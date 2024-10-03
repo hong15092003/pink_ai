@@ -32,19 +32,19 @@ class StartViewState extends State<StartView> {
   }
 
   Future<void> getProfile() async {
+    final snapshot = await _firebaseUser.get();
+    final data = snapshot.data();
+    if (data == null) {
+      throw Exception('Data is null');
+    }
     try {
-      final snapshot = await _firebaseUser.get();
-      final data = snapshot.data();
-      if (data == null) {
-        throw Exception('Data is null');
-      }
       config.updateProfile(
           data['userId'], data['fistName'], data['lastName'], data['email']);
       primaryColorNotifier.value = config.hexToColor(data['primaryColor']);
       themeModeNotifier.value = checkTheme(data['theme']);
       config.updatePath(data['userId']);
     } catch (e) {
-      return;
+      config.updatePath(data['userId']);
     }
   }
 

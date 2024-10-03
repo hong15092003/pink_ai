@@ -107,13 +107,14 @@ class FirebaseController {
 
   Future<List<ChatDetailModel>> searchChat(String name) async {
     List<ChatDetailModel> listChat = [];
+    final nameToLowerCase = name.toLowerCase();
     await config.firestoreSaveData
         .orderBy('endTime', descending: true)
         .get()
         .then(
       (value) {
         for (var element in value.docs) {
-          if (element.data()['name'].contains(name)) {
+          if (element.data()['name'].toLowerCase().contains(nameToLowerCase)) {
             listChat.add(
               ChatDetailModel.fromMap(
                 element.data(),
@@ -135,7 +136,7 @@ class AuthFirebase {
       'lastName': lastName,
       'fistName': fistName,
       'email': email,
-      'primaryColor': '#0xFF2196F3', // Màu mặc định là màu xanh dương
+      'primaryColor': '#ff2196f3', // Màu mặc định là màu xanh dương
       'theme': ThemeMode.system.toString(),
     });
   }
@@ -167,7 +168,7 @@ class AuthFirebase {
     } catch (e) {
       return 'Không thể tạo tài khoản';
     }
-    return 'Không thể tạo tài khoản';
+    return 'Success';
   }
 
   Future<String> signInWithEmailAndPassword(email, password) async {
@@ -188,7 +189,7 @@ class AuthFirebase {
       debugPrint('Error: $e');
       return 'Đã xảy ra lỗi. Vui lòng thử lại';
     }
-    return 'Đã xảy ra lỗi. Vui lòng thử lại';
+    return 'Success';
   }
 
   void signOut() async {

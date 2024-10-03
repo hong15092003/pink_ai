@@ -80,8 +80,20 @@ class Body {
               // Unique identifier for this item
               background: Container(
                 padding: const EdgeInsets.only(right: 20),
-                color: Theme.of(context).primaryColor,
+                // color: Theme.of(context).primaryColor,
                 alignment: Alignment.centerRight,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).shadowColor,
+                      blurRadius: 3.0,
+                      spreadRadius: 0.0,
+                      offset: const Offset(1, 1),
+                    )
+                  ],
+                ),
                 child: const Icon(
                   Icons.delete_outline_rounded,
                   color: Colors.white,

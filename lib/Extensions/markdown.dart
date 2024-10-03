@@ -8,9 +8,9 @@ class MarkDown extends StatelessWidget {
   const MarkDown(this._data, {super.key, this.color});
   @override
   Widget build(BuildContext context) {
-     TextStyle textSytyle = Theme.of(context).textTheme.labelSmall!.copyWith(
-        color: color ?? Theme.of(context).textTheme.labelSmall!.color,
-      );
+    TextStyle textSytyle = Theme.of(context).textTheme.labelSmall!.copyWith(
+          color: color ?? Theme.of(context).textTheme.labelSmall!.color,
+        );
     return MarkdownBody(
       onSelectionChanged: (a, b, c) => (),
       selectable: true,
@@ -35,14 +35,14 @@ class MarkDown extends StatelessWidget {
         tableBody: textSytyle,
         listBullet: textSytyle,
         codeblockDecoration: BoxDecoration(
-          color: Colors.grey[900],
+          color: Theme.of(context).canvasColor,
           borderRadius: BorderRadius.circular(5),
           border: Border.all(
-            color: Colors.grey[800]!,
+            color: Theme.of(context).primaryColor,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey[800]!,
+              color: Theme.of(context).primaryColor,
               blurRadius: 2.0,
               spreadRadius: 1.0,
             ),

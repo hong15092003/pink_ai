@@ -7,6 +7,7 @@ import 'package:pink_ai/controllers/firebase_controller.dart';
 import 'package:pink_ai/controllers/login_register_controller.dart';
 import 'package:pink_ai/components/text_filed/text_box.dart';
 import 'package:pink_ai/main.dart';
+import 'package:pink_ai/views/auth_view.dart';
 
 class SettingsView extends StatefulWidget {
   final ValueNotifier<bool> display;
@@ -73,7 +74,11 @@ class _SettingsViewState extends State<SettingsView> {
               icon: Icons.logout,
               onPressed: () {
                 loginRegisterController.signOut();
-                // Navigator.pushReplacementNamed(context, '/login');
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => const AuthGateWay(),
+                  ),
+                );
               }).noBorder(),
         ).view(),
       ],
@@ -114,7 +119,12 @@ class Card {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          item,
+          Expanded(
+              child:Align(
+                  alignment: Alignment.centerRight,
+                  child: item
+              )
+          ),
         ],
       ),
     );

@@ -71,6 +71,7 @@ class ButtonText {
       child: Text(text,
           style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                 color: Theme.of(context).primaryColor,
+            overflow: TextOverflow.ellipsis,
               )),
     );
   }
